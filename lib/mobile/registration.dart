@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:myapp/mobile/login.dart';
 
 class RegisterPage extends StatelessWidget {
   RegisterPage({Key? key}) : super(key: key);
@@ -114,6 +115,7 @@ Future<void> registerUser(
                         name = value;
                       },
                     ),
+                    
                     SizedBox(height: 16 * fem),
                     TextFormField(
                       decoration: InputDecoration(labelText: 'Email'),
@@ -177,6 +179,24 @@ Future<void> registerUser(
                         ),
                       ),
                     ),
+
+                    // Link to redirect to login page
+              InkWell(
+  onTap: () {
+    // Navigate to the login page here
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => LoginPage()),
+    );
+  },
+  child: Text(
+    'Already have an account? Login here.',
+    style: TextStyle(
+      color: const Color(0xFF81B2CA), // You can customize the color
+    ),
+  ),
+),
+
                   ],
                 ),
               ),

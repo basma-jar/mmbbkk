@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:myapp/mobile/registration.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -121,6 +122,22 @@ Future<void> login(String email, String password) async {
               ),
               child: Text('Login'),
             ),
+            InkWell(
+  onTap: () {
+    // Navigate to the login page here
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => RegisterPage()),
+    );
+  },
+  child: Text(
+    'create an accounte.',
+    style: TextStyle(
+      color: const Color(0xFF81B2CA), // You can customize the color
+    ),
+  ),
+),
+
           ],
         ),
       ),
