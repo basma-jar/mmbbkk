@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/utils.dart';
-import 'package:myapp/mobile/mybalanc.dart';
+import 'package:myapp/mobile/newbudget.dart';
 
 void main() => runApp(const MyApp());
 
@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: Scene(),
+      home: NewBudget(),
     );
   }
 }
