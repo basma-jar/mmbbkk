@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/utils.dart';
 
-class Scene extends StatelessWidget {
-  const Scene({super.key});
+class Profile extends StatelessWidget {
+  const Profile({super.key});
 
   @override
   Widget build(BuildContext context) {
     double baseWidth = 430;
     double fem = MediaQuery.of(context).size.width / baseWidth;
     double ffem = fem * 0.97;
-    return SizedBox(
-      width: double.infinity,
-      child: Container(
+    
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: SizedBox(
+          width: double.infinity,
+          child: Container(
+                child: Container(
         // profile7Vv (17:99)
         width: double.infinity,
         decoration: const BoxDecoration (
@@ -84,7 +88,7 @@ class Scene extends StatelessWidget {
             ),
             Container(
               // autogroupzuzsnJY (HqzZV1Ea6ncgVdu6PMzUZS)
-              padding: EdgeInsets.fromLTRB(48*fem, 34*fem, 45*fem, 80.22*fem),
+              padding: EdgeInsets.fromLTRB(28*fem, 24*fem, 35*fem, 60.22*fem),
               width: double.infinity,
               decoration: BoxDecoration (
                 color: const Color(0xffffffff),
@@ -98,7 +102,7 @@ class Scene extends StatelessWidget {
                 children: [
                   Container(
                     // group76254mr (17:1279)
-                    margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 0*fem, 28*fem),
+                    margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 0*fem, 20*fem),
                     width: double.infinity,
                     decoration: BoxDecoration (
                       borderRadius: BorderRadius.circular(10*fem),
@@ -281,6 +285,9 @@ class Scene extends StatelessWidget {
           ],
         ),
       ),
-          );
+          ),
+        ),
+      ),
+    );
   }
 }
