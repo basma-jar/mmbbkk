@@ -1,76 +1,72 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:myapp/mobile/home-page.dart';
 import 'package:myapp/mobile/registration.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({Key? key}) : super(key: key);
 
-Future<void> login(String email, String password) async {
-  // API endpoint URL for login
-  const apiUrl = 'https://mbk-ba-auth-tf4r7.ondigitalocean.app/login';
+Future<void> login(BuildContext context, String email, String password) async {
+  if (email.isEmpty || password.isEmpty) {
+    // Handle empty fields
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Please enter both email and password.'),
+      ),
+    );
+    return;
+  }
+
+  // Validate email format
+  if (!RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$').hasMatch(email)) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Please enter a valid email address.'),
+      ),
+    );
+    return;
+  }
+
+  final apiUrl = 'https://mbk-ba-auth-tf4r7.ondigitalocean.app/login/?user_email=$email&user_password=$password';
 
   try {
-    // Make a POST request to the server with parameters in the URL
     final response = await http.post(
-      Uri.parse('$apiUrl?user_email=$email&user_password=$password'),
+      Uri.parse(apiUrl),
       headers: {'Content-Type': 'application/json'},
     );
 
+    print('RESPONSE: ${response.statusCode}');
+    print('RESPONSE BODY: ${response.body}');
+
     if (response.statusCode == 200) {
-      // Check if the response body is not empty
-      if (response.body.isNotEmpty) {
-        try {
-          // Try to decode the response body as JSON
-          final responseBody = json.decode(response.body);
-          print('Response body: $responseBody');
-
-          // Check if the expected fields are present in the response
-          if (responseBody.containsKey('user_email') &&
-              responseBody.containsKey('user_password')) {
-            // Add logic to handle successful login here
-          } else {
-            print('Invalid response format');
-            // Handle invalid response format
-          }
-        } catch (e) {
-          print('Error decoding JSON: $e');
-          // Handle JSON decoding error
-        }
-      } else {
-        print('Empty response body');
-        // Handle empty response body
-      }
-    } else if (response.statusCode == 307) {
-    // Handle redirection
-    final redirectLocation = response.headers['location'];
-    print('Redirect Location: $redirectLocation');
-
-    // Make a follow-up POST request to the new location
-    if (redirectLocation != null) {
-      final redirectResponse = await http.post(
-        Uri.parse(redirectLocation),
-        headers: {'Content-Type': 'application/json'},
+      //print('you logged in');
+      // Assuming the login is successful, navigate to the home page
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomePage()),
       );
-
-      // Handle the redirect response as needed
-      print('Redirect Response: ${redirectResponse.body}');
-      }
     } else {
       // Unsuccessful login
-      print('Status Code: ${response.statusCode}');
-      print('Headers: ${response.headers}');
-      print('Raw Response body: ${response.body}');
-      // Add logic to handle unsuccessful login here
+      showErrorMessage(context, 'Invalid credentials');
     }
   } catch (e) {
     print('Error: $e');
-    // Handle any exceptions here
+    showErrorMessage(context, 'An error occurred during login');
   }
 }
 
 
-  @override
+
+  void showErrorMessage(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+      ),
+    );
+  }
+
+   @override
   Widget build(BuildContext context) {
     String email = '';
     String password = '';
@@ -115,7 +111,7 @@ Future<void> login(String email, String password) async {
             ElevatedButton(
               onPressed: () {
                 // Call the login function when the button is pressed
-                login(email, password);
+                login(context,email, password);
               },
               style: ElevatedButton.styleFrom(
                 primary: Color(0xFFFFC727), // Change this to your desired color
