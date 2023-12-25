@@ -2,10 +2,16 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:myapp/mobile/login.dart';
-
-class RegisterPage extends StatelessWidget {
+import 'package:image_picker/image_picker.dart';
+class RegisterPage extends StatefulWidget {
   RegisterPage({Key? key}) : super(key: key);
 
+  @override
+  _RegisterPageState createState() => _RegisterPageState();
+}
+
+class _RegisterPageState extends State<RegisterPage> {
+  final _formKey = GlobalKey<FormState>();
 
   // Variables to store user input
   String name = '';
@@ -14,46 +20,65 @@ class RegisterPage extends StatelessWidget {
   String firstName = '';
   String lastName = '';
   String dateOfBirth = '';
-
-Future<void> registerUser(
-  String name,
-  String email,
-  String password,
-  String firstName,
-  String lastName,
-  String dateOfBirth,
-) async {
-  final url = Uri.parse('https://mbk-ba-tpz6w.ondigitalocean.app/users/');
-
-  final formattedDateOfBirth = dateOfBirth.isNotEmpty ? dateOfBirth : null;
-
-  final response = await http.post(
-    url,
-    body: jsonEncode({
-      'username': name,
-      'email': email,
-      'password_hash': password,
-      'first_name': firstName,
-      'last_name': lastName,
-      'date_of_birth': formattedDateOfBirth,
-      'created_at': DateTime.now().toUtc().toIso8601String(),
-    }),
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  );
-
-  if (response.statusCode == 201) {
-    print('User registered successfully');
-    // You can navigate to the next screen or perform any other action here
-  } else {
-    print('Failed to register user. Status code: ${response.statusCode}');
-    print('Response body: ${response.body}');
-    // Handle the registration failure
+  String profileImage = '';
+Future<void> _pickProfileImage() async {
+    final ImagePicker _picker = ImagePicker();
+    
+    try {
+      final XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+      
+      if (pickedFile != null) {
+        setState(() {
+          profileImage = pickedFile.path;
+        });
+      } else {
+        print('No image selected');
+      }
+    } catch (e) {
+      print('Error picking image: $e');
+    }
   }
-}
+  Future<void> registerUser() async {
+    if (_formKey.currentState!.validate()) {
+      final url = Uri.parse('https://mbk-ba-tpz6w.ondigitalocean.app/users/');
 
+      final formattedDateOfBirth =
+          dateOfBirth.isNotEmpty ? dateOfBirth : null;
 
+      final response = await http.post(
+        url,
+        body: jsonEncode({
+          'username': name,
+          'profile_image': profileImage,
+          'email': email,
+          'password_hash': password,
+          'first_name': firstName,
+          'last_name': lastName,
+          'date_of_birth': formattedDateOfBirth,
+          'created_at': DateTime.now().toUtc().toIso8601String(),
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 201) {
+        print('User registered successfully');
+      } else {
+        print('Failed to register user. Status code: ${response.statusCode}');
+        print('Response body: ${response.body}');
+      }
+    }
+  }
+ void showErrorMessage(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+      ),
+    );
+  }
+
+  
   Future<void> _selectDateOfBirth(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -63,20 +88,17 @@ Future<void> registerUser(
     );
 
     if (picked != null) {
-      String formattedDateOfBirth = picked.toUtc().toIso8601String();
-      formattedDateOfBirth = formattedDateOfBirth.substring(0, 19) + 'Z';
-      dateOfBirth = formattedDateOfBirth;
+      setState(() {
+        dateOfBirth = picked.toUtc().toIso8601String();
+      });
     } else {
-      // Handle the case where the user didn't select a date
+       showErrorMessage(context, 'You did not select a date');
+      // Define your error message function and call it here
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    double baseWidth = 430;
-    double fem = MediaQuery.of(context).size.width / baseWidth;
-    double ffem = fem * 0.97;
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Create Account'),
@@ -87,120 +109,111 @@ Future<void> registerUser(
           decoration: BoxDecoration(
             color: Color(0xffdeebe8),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              // ... Your existing code ...
-
-              // Form for user registration
-              Container(
-                padding: EdgeInsets.all(20 * fem),
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: const Color(0xffffffff),
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(32 * fem),
-                    topRight: Radius.circular(32 * fem),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                TextFormField(
+                  // ... Your existing code ...
+                ),
+                TextFormField(
+                  decoration: InputDecoration(labelText: 'Your Name'),
+                  onChanged: (value) {
+                    setState(() {
+                      name = value;
+                    });
+                  },
+                ),
+                SizedBox(height: 16),
+                TextFormField(
+                  decoration: InputDecoration(labelText: 'Email'),
+                  onChanged: (value) {
+                    setState(() {
+                      email = value;
+                    });
+                  },
+                ),
+                SizedBox(height: 16),
+                TextFormField(
+                  decoration: InputDecoration(labelText: 'Password'),
+                  obscureText: true,
+                  onChanged: (value) {
+                    setState(() {
+                      password = value;
+                    });
+                  },
+                ),
+                SizedBox(height: 16),
+                TextFormField(
+                  decoration: InputDecoration(labelText: 'First Name'),
+                  onChanged: (value) {
+                    setState(() {
+                      firstName = value;
+                    });
+                  },
+                ),
+                SizedBox(height: 16),
+                TextFormField(
+                  decoration: InputDecoration(labelText: 'Last Name'),
+                  onChanged: (value) {
+                    setState(() {
+                      lastName = value;
+                    });
+                  },
+                ),
+                SizedBox(height: 16),
+                 ElevatedButton(
+                        onPressed: () async {
+                          await _pickProfileImage();
+                        },
+                        child: Text('Pick Profile Image'),
+                      ),
+                SizedBox(height: 16),
+                TextFormField(
+                  decoration: InputDecoration(labelText: 'Date of Birth'),
+                  readOnly: true,
+                  onTap: () async {
+                    await _selectDateOfBirth(context);
+                  },
+                ),
+                SizedBox(height: 24),
+                ElevatedButton(
+                  onPressed: registerUser,
+                  style: ElevatedButton.styleFrom(
+                    primary: const Color(0xffffc727),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Text(
+                      'Save',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500,
+                        color: const Color(0xff000000),
+                      ),
+                    ),
                   ),
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    // ... Your existing code ...
-
-                    // Form fields for user registration
-                    TextFormField(
-                      decoration: InputDecoration(labelText: 'Your Name'),
-                      onChanged: (value) {
-                        name = value;
-                      },
+                InkWell(
+                  onTap: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => LoginPage()),
+                    );
+                  },
+                  child: Text(
+                    'Already have an account? Login here.',
+                    style: TextStyle(
+                      color: const Color(0xFF81B2CA),
                     ),
-                    
-                    SizedBox(height: 16 * fem),
-                    TextFormField(
-                      decoration: InputDecoration(labelText: 'Email'),
-                      onChanged: (value) {
-                        email = value;
-                      },
-                    ),
-                    SizedBox(height: 16 * fem),
-                    TextFormField(
-                      decoration: InputDecoration(labelText: 'Password'),
-                      obscureText: true,
-                      onChanged: (value) {
-                        password = value;
-                      },
-                    ),
-                    SizedBox(height: 16 * fem),
-                    TextFormField(
-                      decoration: InputDecoration(labelText: 'First Name'),
-                      onChanged: (value) {
-                        firstName = value;
-                      },
-                    ),
-                    SizedBox(height: 16 * fem),
-                    TextFormField(
-                      decoration: InputDecoration(labelText: 'Last Name'),
-                      onChanged: (value) {
-                        lastName = value;
-                      },
-                    ),
-                    SizedBox(height: 16 * fem),
-                    TextFormField(
-                      decoration: InputDecoration(labelText: 'Date of Birth'),
-                      readOnly: true,
-                      onTap: () async {
-                        await _selectDateOfBirth(context);
-                      },
-                    ),
-                    SizedBox(height: 24 * fem),
-
-                    // Button to save registration
-                    ElevatedButton(
-                      onPressed: () {
-                        // Call the registerUser function with actual values
-                        registerUser(name, email, password, firstName, lastName, dateOfBirth);
-                      },
-                      style: ElevatedButton.styleFrom(
-                        primary: const Color(0xffffc727),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10 * fem),
-                        ),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.all(16 * fem),
-                        child: Text(
-                          'Save',
-                          style: TextStyle(
-                            fontSize: 20 * ffem,
-                            fontWeight: FontWeight.w500,
-                            color: const Color(0xff000000),
-                          ),
-                        ),
-                      ),
-                    ),
-
-                    // Link to redirect to login page
-              InkWell(
-  onTap: () {
-    // Navigate to the login page here
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => LoginPage()),
-    );
-  },
-  child: Text(
-    'Already have an account? Login here.',
-    style: TextStyle(
-      color: const Color(0xFF81B2CA), // You can customize the color
-    ),
-  ),
-),
-
-                  ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

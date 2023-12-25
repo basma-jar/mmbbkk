@@ -1,4 +1,4 @@
-import 'dart:convert';
+//import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:myapp/mobile/home-page.dart';
@@ -15,7 +15,6 @@ Future<void> login(BuildContext context, String email, String password) async {
         content: Text('Please enter both email and password.'),
       ),
     );
-    return;
   }
 
   // Validate email format
@@ -25,7 +24,6 @@ Future<void> login(BuildContext context, String email, String password) async {
         content: Text('Please enter a valid email address.'),
       ),
     );
-    return;
   }
 
   final apiUrl = 'https://mbk-ba-auth-tf4r7.ondigitalocean.app/login/?user_email=$email&user_password=$password';
