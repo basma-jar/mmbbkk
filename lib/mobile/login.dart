@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:myapp/mobile/home-page.dart';
 import 'package:myapp/mobile/registration.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 class LoginPage extends StatelessWidget {
   const LoginPage({Key? key}) : super(key: key);
 
@@ -36,7 +36,9 @@ Future<void> login(BuildContext context, String email, String password) async {
 
     print('RESPONSE: ${response.statusCode}');
     print('RESPONSE BODY: ${response.body}');
-
+    // Store the user ID using shared_preferences
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setInt('user_id', int.parse(response.body));
     if (response.statusCode == 200) {
       //print('you logged in');
       // Assuming the login is successful, navigate to the home page

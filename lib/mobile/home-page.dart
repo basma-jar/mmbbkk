@@ -1,32 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/utils.dart';
+import 'package:myapp/mobile/home-page.dart';
+import 'package:myapp/mobile/profile.dart';
+import 'package:myapp/mobile/mybudget.dart';
+import 'package:myapp/mobile/mybalanc.dart';
+import 'package:myapp/mobile/NewBudget.dart';
+class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  @override
+  _HomePageState createState() => _HomePageState();
+}
 
+class _HomePageState extends State<HomePage> {
+  int _currentIndex = 0;
   @override
   Widget build(BuildContext context) {
     double baseWidth = 430;
     double fem = MediaQuery.of(context).size.width / baseWidth;
     double ffem = fem * 0.97;
-    return SizedBox(
-      width: double.infinity,
-      child: Container(
-        // homepagexXE (17:813)
-        width: double.infinity,
-        decoration: const BoxDecoration (
-          color: Color(0xfff4f6f6),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              // autogroupsksgs8Q (Hqzi7vWaiWY6kWpEMfSkSG)
-              padding: EdgeInsets.fromLTRB(27*fem, 32*fem, 51*fem, 41*fem),
-              width: double.infinity,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: Container(
+          width: double.infinity,
+          decoration: const BoxDecoration(
+            color: Color(0xfff4f6f6),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                padding: EdgeInsets.fromLTRB(27 * fem, 32 * fem, 51 * fem, 41 * fem),
+                width: double.infinity,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+
+                  
                   Container(
                     // gridNL4 (17:826)
                     margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 334*fem, 20*fem),
@@ -360,24 +370,73 @@ class HomePage extends StatelessWidget {
                           ),
                         ),
                       ],
+                   
+
                     ),
                   ),
                 ],
+                ),
               ),
-            ),
-            SizedBox(
-              // autogroupgure2Ct (HqzhsM6Y4CsdvGPdoSguRe)
-              width: 430*fem,
-              height: 113*fem,
-              child: Image.asset(
-                'assets/mobile/images/auto-group-gure.png',
-                width: 430*fem,
-                height: 113*fem,
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
-          );
+        bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Color(0xFF81b2ca),
+        selectedItemColor: Colors.grey,
+        unselectedItemColor: Colors.grey,
+        currentIndex: _currentIndex,
+        onTap: (int index) {
+          // Handle navigation here
+          _handleNavigation(index);
+        },
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.wallet),
+            label: 'wallet',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.add),
+            label: 'Add',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.sync_alt),
+            label: 'Mybalance',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _handleNavigation(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
+
+    switch (index) {
+      case 0:
+        Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
+        break;
+      case 1:
+       Navigator.push(context, MaterialPageRoute(builder: (context) => Profile()));
+        break;
+      case 2:
+        Navigator.push(context, MaterialPageRoute(builder: (context) => NewBudget()));
+        break;
+      case 3:
+       Navigator.push(context, MaterialPageRoute(builder: (context) => mybalance()));
+        break;
+      case 4:
+       Navigator.push(context, MaterialPageRoute(builder: (context) => Profile()));
+        break;
+    }
   }
 }

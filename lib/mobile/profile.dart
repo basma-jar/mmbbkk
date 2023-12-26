@@ -1,8 +1,45 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:myapp/mobile/home-page.dart';
 import 'package:myapp/utils.dart';
 
-class Profile extends StatelessWidget {
-  const Profile({super.key});
+class Profile extends StatefulWidget {
+  const Profile({Key? key}) : super(key: key);
+
+  @override
+  _ProfileState createState() => _ProfileState();
+}
+
+class _ProfileState extends State<Profile> {
+  late Map<String, dynamic> userData;
+
+  @override
+  void initState() {
+    super.initState();
+    // Load user data when the widget is created
+    loadUserData();
+  }
+
+  Future<void> loadUserData() async {
+    // Fetch user ID from shared_preferences or Provider
+    // Replace this with the method you use to get the user ID
+    int userId = 2; // Replace with your actual method to get the user ID
+
+    // Fetch user data based on the user ID
+    final apiUrl = 'https://mbk-ba-tpz6w.ondigitalocean.app/users/$userId';
+    final response = await http.get(Uri.parse(apiUrl));
+
+    if (response.statusCode == 200) {
+      // Parse and set the user data
+      setState(() {
+        userData = json.decode(response.body);
+      });
+    } else {
+      // Handle error
+      print('Failed to load user data. Status code: ${response.statusCode}');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,29 +69,32 @@ class Profile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Container(
-                    // group30R2k (17:120)
-                    margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 360*fem, 4*fem),
-                    child: TextButton(
-                      onPressed: () {},
-                      style: TextButton.styleFrom (
-                        padding: EdgeInsets.zero,
-                      ),
-                      child: Container(
-                        padding: EdgeInsets.fromLTRB(20.86*fem, 23*fem, 20.86*fem, 23*fem),
-                        child: Center(
-                          // arrowdownHKr (17:122)
-                          child: SizedBox(
-                            width: 18.29*fem,
-                            height: 14*fem,
-                            child: Image.asset(
-                              'assets/mobile/images/arrow-down.png',
-                              width: 18.29*fem,
-                              height: 14*fem,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
+                   // group30R2k (17:120)
+margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 360*fem, 4*fem),
+child: GestureDetector(
+  onTap: () {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => HomePage()),
+    );
+  },
+  child: Container(
+    padding: EdgeInsets.fromLTRB(20.86 * fem, 23 * fem, 20.86 * fem, 23 * fem),
+    child: Center(
+      // arrowdownHKr (17:122)
+      child: SizedBox(
+        width: 18.29 * fem,
+        height: 14 * fem,
+        child: Image.asset(
+          'assets/mobile/images/arrow-down.png',
+          width: 18.29 * fem,
+          height: 14 * fem,
+        ),
+      ),
+    ),
+  ),
+),
+
                   ),
                   Container(
                     // rectangle1S6G (17:1277)
@@ -73,9 +113,9 @@ class Profile extends StatelessWidget {
                     // judevXE (17:1278)
                     margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 5*fem, 0*fem),
                     child: Text(
-                      'Jude',
-                      style: SafeGoogleFont (
-                        'Inter',
+                     '${userData['first_name']}',
+                                style: SafeGoogleFont(
+                                  'Inter',
                         fontSize: 20*ffem,
                         fontWeight: FontWeight.w400,
                         height: 1.2125*ffem/fem,
@@ -134,7 +174,7 @@ class Profile extends StatelessWidget {
                             borderRadius: BorderRadius.circular(10*fem),
                           ),
                           child: Text(
-                            'Jonathan',
+                             '${userData['first_name']} ${userData['last_name']}',
                             style: SafeGoogleFont (
                               'Inter',
                               fontSize: 17*ffem,
@@ -168,7 +208,7 @@ class Profile extends StatelessWidget {
                             borderRadius: BorderRadius.circular(10*fem),
                           ),
                           child: Text(
-                            'Jonathan123@gmail.com',
+                             'Email: ${userData['email']}',
                             style: SafeGoogleFont (
                               'Inter',
                               fontSize: 17*ffem,
@@ -182,7 +222,7 @@ class Profile extends StatelessWidget {
                           // mobilenumberELt (17:1293)
                           margin: EdgeInsets.fromLTRB(1*fem, 0*fem, 0*fem, 4.84*fem),
                           child: Text(
-                            'Mobile Number ',
+                            'Date of Birth ',
                             style: SafeGoogleFont (
                               'Inter',
                               fontSize: 19*ffem,
@@ -202,7 +242,7 @@ class Profile extends StatelessWidget {
                             borderRadius: BorderRadius.circular(10*fem),
                           ),
                           child: Text(
-                            '+1 123 3698 789',
+                            'Date of Birth: ${userData['date_of_birth']}',
                             style: SafeGoogleFont (
                               'Inter',
                               fontSize: 17*ffem,
@@ -212,39 +252,7 @@ class Profile extends StatelessWidget {
                             ),
                           ),
                         ),
-                        Container(
-                          // passwordbKr (17:1295)
-                          margin: EdgeInsets.fromLTRB(1*fem, 0*fem, 0*fem, 4.83*fem),
-                          child: Text(
-                            'Password',
-                            style: SafeGoogleFont (
-                              'Inter',
-                              fontSize: 19*ffem,
-                              fontWeight: FontWeight.w100,
-                              height: 1.4650000522*ffem/fem,
-                              color: const Color(0xff23303b),
-                            ),
-                          ),
-                        ),
-                        Container(
-                          // group7622iQU (17:1289)
-                          padding: EdgeInsets.fromLTRB(22*fem, 19.17*fem, 22*fem, 8*fem),
-                          width: double.infinity,
-                          decoration: BoxDecoration (
-                            color: const Color(0x26a4a9ae),
-                            borderRadius: BorderRadius.circular(10*fem),
-                          ),
-                          child: Text(
-                            '**********',
-                            style: SafeGoogleFont (
-                              'Inter',
-                              fontSize: 17*ffem,
-                              fontWeight: FontWeight.w500,
-                              height: 1.4650000404*ffem/fem,
-                              color: const Color(0xff8e949a),
-                            ),
-                          ),
-                        ),
+                       
                       ],
                     ),
                   ),

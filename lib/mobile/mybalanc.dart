@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/mobile/mybudget.dart';
-class Scene extends StatelessWidget {
-  const Scene({Key? key}) : super(key: key);
+class mybalance extends StatelessWidget {
+  const mybalance({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
