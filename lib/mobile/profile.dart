@@ -3,10 +3,11 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:myapp/mobile/home-page.dart';
 import 'package:myapp/utils.dart';
-
 class Profile extends StatefulWidget {
-  const Profile({Key? key}) : super(key: key);
+  final int userId;
 
+  const Profile({Key? key, required this.userId}) : super(key: key);
+  
   @override
   _ProfileState createState() => _ProfileState();
 }
@@ -22,16 +23,14 @@ class _ProfileState extends State<Profile> {
   }
 
   Future<void> loadUserData() async {
-    // Fetch user ID from shared_preferences or Provider
-    // Replace this with the method you use to get the user ID
-    int userId = 2; // Replace with your actual method to get the user ID
+    int userId = widget.userId;
+    //print('User ID: $userId');
 
     // Fetch user data based on the user ID
     final apiUrl = 'https://mbk-ba-tpz6w.ondigitalocean.app/users/$userId';
     final response = await http.get(Uri.parse(apiUrl));
 
     if (response.statusCode == 200) {
-      // Parse and set the user data
       setState(() {
         userData = json.decode(response.body);
       });
@@ -75,7 +74,7 @@ child: GestureDetector(
   onTap: () {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => HomePage()),
+      MaterialPageRoute(builder: (context) => HomePage(userId: widget.userId)),
     );
   },
   child: Container(

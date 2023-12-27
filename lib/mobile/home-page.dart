@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/utils.dart';
 import 'package:myapp/mobile/profile.dart';
+import 'package:myapp/mobile/mybudget.dart';
 import 'package:myapp/mobile/mybalanc.dart';
-import 'package:myapp/mobile/NewBudget.dart';
+import 'package:myapp/mobile/newBudget.dart';
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  final int userId;
+
+  const HomePage({Key? key, required this.userId}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -421,19 +424,19 @@ class _HomePageState extends State<HomePage> {
 
     switch (index) {
       case 0:
-        Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
+       Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage(userId: widget.userId)));
         break;
       case 1:
-       Navigator.push(context, MaterialPageRoute(builder: (context) => Profile()));
+       Navigator.push(context, MaterialPageRoute(builder: (context) => MyBudget(userId: widget.userId)));
         break;
       case 2:
-        Navigator.push(context, MaterialPageRoute(builder: (context) => NewBudget()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => NewBudget(userId: widget.userId)));
         break;
       case 3:
-       Navigator.push(context, MaterialPageRoute(builder: (context) => mybalance()));
+       Navigator.push(context, MaterialPageRoute(builder: (context) => mybalance(userId: widget.userId)));
         break;
       case 4:
-       Navigator.push(context, MaterialPageRoute(builder: (context) => Profile()));
+       Navigator.push(context, MaterialPageRoute(builder: (context) => Profile(userId: widget.userId)));
         break;
     }
   }

@@ -1,10 +1,64 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/gestures.dart';
-import 'dart:ui';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:intl/intl.dart';
 import 'package:myapp/utils.dart';
+import 'package:myapp/mobile/home-page.dart';
+class NewBudget extends StatefulWidget {
+  final int userId;
 
-class NewBudget extends StatelessWidget {
+  const NewBudget({Key? key, required this.userId}) : super(key: key);
+
+  @override
+  _NewBudgetState createState() => _NewBudgetState();
+}
+
+class _NewBudgetState extends State<NewBudget> {
+  TextEditingController labelController = TextEditingController();
+  TextEditingController amountController = TextEditingController();
+  TextEditingController startDateController = TextEditingController();
+  TextEditingController endDateController = TextEditingController();
+
+  Future<void> createNewBudget() async {
+    final url = Uri.parse("https://mbk-ba-tpz6w.ondigitalocean.app/budgets/");
+    final userToken = widget.userId;
+
+    final payload = {
+    "user_id": widget.userId,
+    "budget_name": labelController.text,
+    "amount": double.parse(amountController.text),
+    "start_at": startDateController.text,
+    "end_at": endDateController.text,
+    "created_at": DateFormat('yyyy-MM-ddTHH:mm:ss').format(DateTime.now()), // Add this line for current date and time
+  };
+
+
+    final headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $userToken',
+    };
+
+    try {
+      final response = await http.post(
+        url,
+        headers: headers,
+        body: jsonEncode(payload),
+      );
+
+      if (response.statusCode == 201) {
+        // Budget created successfully
+        print("Budget created successfully");
+      } else {
+        // Handle other response codes or errors
+        print("Failed to create budget. Status code: ${response.statusCode}");
+        print("Response body: ${response.body}");
+      }
+    } catch (e) {
+      // Handle network or other errors
+      print("Error creating budget: $e");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     double baseWidth = 430;
@@ -44,21 +98,34 @@ class NewBudget extends StatelessWidget {
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            Container(
-                              margin: EdgeInsets.fromLTRB(0 * fem, 0 * fem, 102 * fem, 19 * fem),
-                              padding: EdgeInsets.fromLTRB(20.86 * fem, 23 * fem, 20.86 * fem, 23 * fem),
-                              child: Center(
-                                child: SizedBox(
-                                  width: 18.29 * fem,
-                                  height: 14 * fem,
-                                  child: Image.asset(
-                                    'assets/mobile/images/arrow-down.png',
-                                    width: 18.29 * fem,
-                                    height: 14 * fem,
-                                  ),
-                                ),
-                              ),
-                            ),
+                                              Container(
+                   // group30R2k (17:120)
+margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 360*fem, 4*fem),
+child: GestureDetector(
+  onTap: () {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => HomePage(userId: widget.userId)),
+    );
+  },
+  child: Container(
+    padding: EdgeInsets.fromLTRB(20.86 * fem, 23 * fem, 20.86 * fem, 23 * fem),
+    child: Center(
+      // arrowdownHKr (17:122)
+      child: SizedBox(
+        width: 18.29 * fem,
+        height: 14 * fem,
+        child: Image.asset(
+          'assets/mobile/images/arrow-down.png',
+          width: 18.29 * fem,
+          height: 14 * fem,
+        ),
+      ),
+    ),
+  ),
+),
+
+                  ),
                             Text(
                               'New Budget',
                               textAlign: TextAlign.center,
@@ -74,7 +141,7 @@ class NewBudget extends StatelessWidget {
                         ),
                       ),
                       Container(
-                        margin: EdgeInsets.fromLTRB(15 * fem, 0 * fem, 22.37 * fem, 17.11 * fem),
+                        margin: EdgeInsets.fromLTRB(10 * fem, 0 * fem, 20.37 * fem, 15.11 * fem),
                         width: double.infinity,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10 * fem),
@@ -102,8 +169,8 @@ class NewBudget extends StatelessWidget {
                                 color: Color(0x26a4a9ae),
                                 borderRadius: BorderRadius.circular(10 * fem),
                               ),
-                              child: Text(
-                                'Salaire',
+                              child: TextField(
+                                controller: labelController,
                                 style: SafeGoogleFont(
                                   'Inter',
                                   fontSize: 17 * ffem,
@@ -145,8 +212,8 @@ class NewBudget extends StatelessWidget {
                                 color: Color(0x26a4a9ae),
                                 borderRadius: BorderRadius.circular(10 * fem),
                               ),
-                              child: Text(
-                                '00000.00',
+                              child: TextField(
+                                controller: amountController,
                                 style: SafeGoogleFont(
                                   'Inter',
                                   fontSize: 17 * ffem,
@@ -188,8 +255,8 @@ class NewBudget extends StatelessWidget {
                                 color: Color(0x26a4a9ae),
                                 borderRadius: BorderRadius.circular(10 * fem),
                               ),
-                              child: Text(
-                                '2000-15-15',
+                              child: TextField(
+                                controller: startDateController,
                                 style: SafeGoogleFont(
                                   'Inter',
                                   fontSize: 17 * ffem,
@@ -231,8 +298,8 @@ class NewBudget extends StatelessWidget {
                                 color: Color(0x26a4a9ae),
                                 borderRadius: BorderRadius.circular(10 * fem),
                               ),
-                              child: Text(
-                                '2000-15-15',
+                              child: TextField(
+                                controller: endDateController,
                                 style: SafeGoogleFont(
                                   'Inter',
                                   fontSize: 17 * ffem,
@@ -255,24 +322,19 @@ class NewBudget extends StatelessWidget {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10 * fem),
                   ),
-                  child: Container(
-                    width: double.infinity,
-                    height: double.infinity,
-                    decoration: BoxDecoration(
-                      color: Color(0xffffc727),
-                      borderRadius: BorderRadius.circular(10 * fem),
-                    ),
-                    child: Center(
-                      child: Text(
-                        'Save',
-                        textAlign: TextAlign.right,
-                        style: SafeGoogleFont(
-                          'Inter',
-                          fontSize: 20 * ffem,
-                          fontWeight: FontWeight.w500,
-                          height: 1.4650000572 * ffem / fem,
-                          color: Color(0xff000000),
-                        ),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      createNewBudget();
+                    },
+                    child: Text(
+                      'Save',
+                      textAlign: TextAlign.right,
+                      style: SafeGoogleFont(
+                        'Inter',
+                        fontSize: 20 * ffem,
+                        fontWeight: FontWeight.w500,
+                        height: 1.4650000572 * ffem / fem,
+                        color: Color(0xff000000),
                       ),
                     ),
                   ),

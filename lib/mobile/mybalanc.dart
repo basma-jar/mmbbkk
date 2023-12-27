@@ -1,7 +1,76 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/mobile/mybudget.dart';
-class mybalance extends StatelessWidget {
-  const mybalance({Key? key}) : super(key: key);
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+// Class to represent a budget category
+class BudgetCategory {
+  final int id;
+  final String name;
+
+  BudgetCategory(this.id, this.name);
+}
+
+class mybalance extends StatefulWidget {
+  final int userId;
+
+  const mybalance({Key? key, required this.userId}) : super(key: key);
+
+  @override
+  _mybalanceState createState() => _mybalanceState();
+}
+
+class _mybalanceState extends State<mybalance> {
+  double amount = 0.0;
+  BudgetCategory selectedCategory = BudgetCategory(0, ''); // Updated to hold both ID and name
+  bool isIncome = true;
+
+  // List of budget categories with ID and name
+  List<BudgetCategory> categories = [
+    BudgetCategory(1, 'Groceries'),
+    BudgetCategory(2, 'Rent'),
+    BudgetCategory(3, 'Transportation'),
+    BudgetCategory(4, 'Debt Repayment'),
+    BudgetCategory(5, 'Health and Wellness'),
+    BudgetCategory(6, 'Personal Care'),
+  ];
+
+  void handleSave() async {
+    // Construct the payload to be sent to the API
+    Map<String, dynamic> payload = {
+      "budgets_categories_id": selectedCategory.id,
+      "type": isIncome,
+      "amount": amount,
+      "created_at": DateTime.now().toUtc().toIso8601String(),
+      "updated_at": DateTime.now().toUtc().toIso8601String(),
+      "deleted_at": DateTime.now().toUtc().toIso8601String(),
+    };
+
+    try {
+      // Make the HTTP POST request
+      final response = await http.post(
+        Uri.parse('https://mbk-ba-bu-q9nsy.ondigitalocean.app/budgets/history/'),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(payload),
+      );
+
+      if (response.statusCode == 201) {
+        // Successful response
+        print('Success: ${response.body}');
+        // You can add further actions if needed
+      } else {
+        // Handle other response status codes
+        print('Error: ${response.statusCode}');
+        print('Response body: ${response.body}');
+        // You can add further error handling actions
+      }
+    } catch (error) {
+      // Handle network errors
+      print('Network error: $error');
+      // You can add further error handling actions
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -9,22 +78,11 @@ class mybalance extends StatelessWidget {
     double fem = MediaQuery.of(context).size.width / baseWidth;
     double ffem = fem * 0.97;
 
-    List<String> categories = [
-      'Groceries',
-      'Rent',
-      'Transportation',
-      'Debt Repayment',
-      'Health and Wellness',
-      'Personal Care',
-    ];
-
-    String selectedCategory = categories[0]; // Default selection
-
     return SingleChildScrollView(
       child: SizedBox(
         width: double.infinity,
         child: Container(
-          padding: EdgeInsets.fromLTRB(2 * fem, 0, 2 * fem, 50.22 * fem), // Adjusted padding
+          padding: EdgeInsets.fromLTRB(2 * fem, 0, 2 * fem, 50.22 * fem),
           width: double.infinity,
           decoration: const BoxDecoration(
             color: Color(0xffdeebe8),
@@ -32,272 +90,57 @@ class mybalance extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              // ... Existing code ...
+
+              // Dropdown for categories
               Container(
-                margin: EdgeInsets.fromLTRB(0, 0, 0, 27 * fem),
-                padding: EdgeInsets.fromLTRB(3 * fem, 11 * fem, 3 * fem, 30.83 * fem),
+                padding: EdgeInsets.fromLTRB(25.11 * fem, 19.71 * fem, 25.11 * fem, 19.03 * fem),
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  color: const Color(0xffffffff),
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(32 * fem),
-                    topRight: Radius.circular(32 * fem),
-                  ),
+                  color: const Color(0x26a4a9ae),
+                  borderRadius: BorderRadius.circular(10 * fem),
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      margin: EdgeInsets.fromLTRB(0, 0, 130 * fem, 65 * fem),
-                      width: double.infinity,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Container(
-  margin: EdgeInsets.fromLTRB(0, 0, 133 * fem, 19 * fem),
-  child: GestureDetector(
-   onTap: () {
-    // Navigate to thebudget crud
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => mybudget()),
-    );
-  },
-    child: Container(
-      padding: EdgeInsets.fromLTRB(20.86 * fem, 23 * fem, 20.86 * fem, 23 * fem),
-      child: Center(
-        child: SizedBox(
-          width: 18.29 * fem,
-          height: 14 * fem,
-          child: Image.asset(
-            'assets/mobile/images/arrow-down-yDn.png',
-            width: 18.29 * fem,
-            height: 14 * fem,
-          ),
-        ),
-      ),
-    ),
-  ),
-),
-
-                          Flexible(
-                            child: Text(
-                              'New',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 16 * ffem,
-                                fontWeight: FontWeight.w700,
-                                height: 1.25 * ffem / fem,
-                                color: const Color(0xff030303),
-                              ),
-                            ),
+                child: Material(
+                  color: Colors.transparent,
+                  child: DropdownButton<BudgetCategory>(
+                    value: selectedCategory,
+                    onChanged: (BudgetCategory? newValue) {
+                      if (newValue != null) {
+                        setState(() {
+                          selectedCategory = newValue;
+                        });
+                      }
+                    },
+                    items: categories.map((BudgetCategory category) {
+                      return DropdownMenuItem<BudgetCategory>(
+                        value: category,
+                        child: Text(
+                          category.name,
+                          style: TextStyle(
+                            fontSize: 17 * ffem,
+                            fontWeight: FontWeight.w500,
+                            height: 1.465 * ffem / fem,
+                            color: const Color(0xff8e949a),
                           ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.fromLTRB(15 * fem, 0, 15 * fem, 41.49 * fem), // Adjusted margin
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10 * fem),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            margin: EdgeInsets.fromLTRB(1.14 * fem, 0, 0, 12.15 * fem),
-                            child: Text(
-                              'Amount',
-                              style: TextStyle(
-                                fontSize: 19 * ffem,
-                                fontWeight: FontWeight.w100,
-                                height: 1.465 * ffem / fem,
-                                color: const Color(0xff23303b),
-                              ),
-                            ),
-                          ),
-                          Container(
-                            padding: EdgeInsets.fromLTRB(25.11 * fem, 19.71 * fem, 25.11 * fem, 19.03 * fem),
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              color: const Color(0x26a4a9ae),
-                              borderRadius: BorderRadius.circular(10 * fem),
-                            ),
-                            child: Text(
-                              '00000.00',
-                              style: TextStyle(
-                                fontSize: 17 * ffem,
-                                fontWeight: FontWeight.w500,
-                                height: 1.465 * ffem / fem,
-                                color: const Color(0xff8e949a),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.fromLTRB(15 * fem, 0, 15 * fem, 20 * fem), // Adjusted margin
-                      width: double.infinity,
-                      height: 69.37 * fem,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Container(
-                            margin: EdgeInsets.fromLTRB(0, 0, 10 * fem, 0), // Adjusted margin
-                            width: 123.26 * fem,
-                            height: double.infinity,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10 * fem),
-                            ),
-                            child: Container(
-                              width: double.infinity,
-                              height: double.infinity,
-                              decoration: BoxDecoration(
-                                color: const Color(0xff1cc723),
-                                borderRadius: BorderRadius.circular(10 * fem),
-                              ),
-                              child: Center(
-                                child: Center(
-                                  child: Text(
-                                    'Income',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontSize: 20 * ffem,
-                                      fontWeight: FontWeight.w500,
-                                      height: 1.465 * ffem / fem,
-                                      color: const Color(0xffffffff),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Container(
-                            width: 123.26 * fem,
-                            height: double.infinity,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10 * fem),
-                            ),
-                            child: Container(
-                              width: double.infinity,
-                              height: double.infinity,
-                              decoration: BoxDecoration(
-                                color: const Color(0xffde1313),
-                                borderRadius: BorderRadius.circular(10 * fem),
-                              ),
-                              child: Center(
-                                child: Center(
-                                  child: Text(
-                                    'Expense',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontSize: 20 * ffem,
-                                      fontWeight: FontWeight.w500,
-                                      height: 1.465 * ffem / fem,
-                                      color: const Color(0xffffffff),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-
-Container(
-  padding: EdgeInsets.fromLTRB(25.11 * fem, 19.71 * fem, 25.11 * fem, 19.03 * fem),
-  width: double.infinity,
-  decoration: BoxDecoration(
-    color: const Color(0x26a4a9ae),
-    borderRadius: BorderRadius.circular(10 * fem),
-  ),
-  child: Material( // Wrap DropdownButton with Material
-    color: Colors.transparent, // Set color to transparent to match the parent
-    child: DropdownButton<String>(
-      value: selectedCategory,
-      onChanged: (String? newValue) {
-        if (newValue != null) {
-          selectedCategory = newValue;
-        }
-      },
-      items: categories.map((String category) {
-        return DropdownMenuItem<String>(
-          value: category,
-          child: Text(
-            category,
-            style: TextStyle(
-              fontSize: 17 * ffem,
-              fontWeight: FontWeight.w500,
-              height: 1.465 * ffem / fem,
-              color: const Color(0xff8e949a),
-            ),
-          ),
-        );
-      }).toList(),
-    ),
-  ),
-),
-
-
-                    Container(
-                      margin: EdgeInsets.fromLTRB(15 * fem, 0, 15 * fem, 20 * fem), // Adjusted margin
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10 * fem),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            margin: EdgeInsets.fromLTRB(1.14 * fem, 0, 0, 12.15 * fem),
-                            child: Text(
-                              'Description',
-                              style: TextStyle(
-                                fontSize: 19 * ffem,
-                                fontWeight: FontWeight.w100,
-                                height: 1.465 * ffem / fem,
-                                color: const Color(0xff23303b),
-                              ),
-                            ),
-                          ),
-                          Container(
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10 * fem),
-                            ),
-                            child: Center(
-                              child: SizedBox(
-                                width: double.infinity,
-                                height: 172.3 * fem,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10 * fem),
-                                    color: const Color(0x26a4a9ae),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+                        ),
+                      );
+                    }).toList(),
+                  ),
                 ),
               ),
 
+              // ... Existing code ...
+
               // Save button
               Container(
-                margin: EdgeInsets.fromLTRB(106 * fem, 0, 110.89 * fem, 20 * fem), // Adjusted margin
+                margin: EdgeInsets.fromLTRB(106 * fem, 0, 110.89 * fem, 20 * fem),
                 width: double.infinity,
                 height: 56.78 * fem,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10 * fem),
                 ),
                 child: ElevatedButton(
-                  onPressed: () {
-                    // Handle Save button click
-                  },
+                  onPressed: handleSave,
                   style: ElevatedButton.styleFrom(
                     primary: const Color(0xffffc727),
                     shape: RoundedRectangleBorder(

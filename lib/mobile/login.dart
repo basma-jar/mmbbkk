@@ -1,4 +1,6 @@
 //import 'dart:convert';
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:myapp/mobile/home-page.dart';
@@ -11,7 +13,7 @@ Future<void> login(BuildContext context, String email, String password) async {
   if (email.isEmpty || password.isEmpty) {
     // Handle empty fields
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
+      const SnackBar(
         content: Text('Please enter both email and password.'),
       ),
     );
@@ -20,7 +22,7 @@ Future<void> login(BuildContext context, String email, String password) async {
   // Validate email format
   if (!RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$').hasMatch(email)) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
+      const SnackBar(
         content: Text('Please enter a valid email address.'),
       ),
     );
@@ -34,18 +36,20 @@ Future<void> login(BuildContext context, String email, String password) async {
       headers: {'Content-Type': 'application/json'},
     );
 
-    print('RESPONSE: ${response.statusCode}');
-    print('RESPONSE BODY: ${response.body}');
+    //print('RESPONSE: ${response.statusCode}');
+    //print('RESPONSE BODY: ${response.body}');
     // Store the user ID using shared_preferences
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setInt('user_id', int.parse(response.body));
     if (response.statusCode == 200) {
       //print('you logged in');
       // Assuming the login is successful, navigate to the home page
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => HomePage()),
-      );
+     Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => HomePage(userId: int.parse(response.body)),
+          ),
+        );
     } else {
       // Unsuccessful login
       showErrorMessage(context, 'Invalid credentials');
@@ -73,15 +77,15 @@ Future<void> login(BuildContext context, String email, String password) async {
 
     return Scaffold(
       body: Container(
-        color: Color.fromARGB(255, 255, 255, 255),
-        padding: EdgeInsets.all(16),
+        color: const Color.fromARGB(255, 255, 255, 255),
+        padding: const EdgeInsets.all(16),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             // App Logo
             Container(
-              margin: EdgeInsets.only(bottom: 10),
+              margin: const EdgeInsets.only(bottom: 10),
               child: Image.asset(
                 'assets/mobile/images/MBK_logo.png',
                 height: 300,
@@ -92,21 +96,21 @@ Future<void> login(BuildContext context, String email, String password) async {
               onChanged: (value) {
                 email = value;
               },
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Username',
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             TextField(
               onChanged: (value) {
                 password = value;
               },
               obscureText: true,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Password',
               ),
             ),
-            SizedBox(height: 32),
+            const SizedBox(height: 32),
             // Login Button
             ElevatedButton(
               onPressed: () {
@@ -114,9 +118,9 @@ Future<void> login(BuildContext context, String email, String password) async {
                 login(context,email, password);
               },
               style: ElevatedButton.styleFrom(
-                primary: Color(0xFFFFC727), // Change this to your desired color
+                primary: const Color(0xFFFFC727), // Change this to your desired color
               ),
-              child: Text('Login'),
+              child: const Text('Login'),
             ),
             InkWell(
   onTap: () {
@@ -126,10 +130,10 @@ Future<void> login(BuildContext context, String email, String password) async {
       MaterialPageRoute(builder: (context) => RegisterPage()),
     );
   },
-  child: Text(
+  child: const Text(
     'create an accounte.',
     style: TextStyle(
-      color: const Color(0xFF81B2CA), // You can customize the color
+      color: Color(0xFF81B2CA), // You can customize the color
     ),
   ),
 ),
