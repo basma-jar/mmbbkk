@@ -433,7 +433,7 @@ class _HomePageState extends State<HomePage> {
         Navigator.push(context, MaterialPageRoute(builder: (context) => NewBudget(userId: widget.userId)));
         break;
       case 3:
-       Navigator.push(context, MaterialPageRoute(builder: (context) => mybalance(userId: widget.userId)));
+       Navigator.push(context, MaterialPageRoute(builder: (context) => MyBalance(userId: widget.userId)));
         break;
       case 4:
        Navigator.push(context, MaterialPageRoute(builder: (context) => Profile(userId: widget.userId)));

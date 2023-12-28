@@ -1,9 +1,10 @@
 import 'dart:convert';
-import 'package:myapp/mobile/home-page.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:myapp/mobile/home-page.dart';
 import 'package:myapp/mobile/mybalanc.dart';
 import 'package:myapp/utils.dart';
+
 class MyBudget extends StatefulWidget {
   final int userId;
 
@@ -12,9 +13,10 @@ class MyBudget extends StatefulWidget {
   @override
   _MyBudgetState createState() => _MyBudgetState();
 }
+
 class _MyBudgetState extends State<MyBudget> {
   late Future<List<Map<String, dynamic>>> _budgetData;
-    // List of budget categories with ID and name
+
   List<BudgetCategory> categories = [
     BudgetCategory(1, 'Groceries'),
     BudgetCategory(2, 'Rent'),
@@ -23,36 +25,35 @@ class _MyBudgetState extends State<MyBudget> {
     BudgetCategory(5, 'Health and Wellness'),
     BudgetCategory(6, 'Personal Care'),
   ];
-  // Function to get category name by ID
-String getCategoryNameById(int categoryId) {
-  for (BudgetCategory category in categories) {
-    if (category.id == categoryId) {
-      return category.name;
+
+  String getCategoryNameById(int categoryId) {
+    for (BudgetCategory category in categories) {
+      if (category.id == categoryId) {
+        return category.name;
+      }
     }
+    return 'Unknown Category';
   }
-  // Return a default value or handle the case when no match is found
-  return 'Unknown Category';
-}
+
   @override
   void initState() {
     super.initState();
-    // Call the API when the widget is initialized
     _budgetData = fetchBudget();
   }
+
   Future<List<Map<String, dynamic>>> fetchBudget() async {
     int userId = widget.userId;
-    print('userId :$userId');
     final response = await http.get(
         Uri.parse('https://mbk-ba-bu-q9nsy.ondigitalocean.app/budgets/history/users/$userId'));
 
     if (response.statusCode == 200) {
-      // Parse the JSON response directly into a list of maps
       final List<Map<String, dynamic>> budgetList =
           List<Map<String, dynamic>>.from(json.decode(response.body));
       return budgetList;
+    } else if (response.statusCode == 404) {
+      return []; // Return an empty list for 404 status (no data available)
     } else {
-      // Handle other status codes or errors
-      throw Exception('Failed to load budget');
+      throw Exception('Failed to load budget. Please try again later.');
     }
   }
 
@@ -61,25 +62,50 @@ String getCategoryNameById(int categoryId) {
     double baseWidth = 430;
     double fem = MediaQuery.of(context).size.width / baseWidth;
     double ffem = fem * 0.97;
+
     return FutureBuilder<List<Map<String, dynamic>>>(
       future: _budgetData,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          // If the Future is still running, show a loading indicator
           return const CircularProgressIndicator();
         } else if (snapshot.hasError) {
-          // If an error occurs, display an error message
-          return Text('Error: ${snapshot.error}');
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                'Error: ${snapshot.error}',
+                style: TextStyle(
+                  fontSize: 16.0,
+                  color: Colors.red,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              // You can add other UI elements or actions based on error handling here
+            ],
+          );
         } else {
-          // If the Future is complete, display the UI with the fetched data
           final List<Map<String, dynamic>> budgetList = snapshot.data!;
 
           if (budgetList.isEmpty) {
-            // If the list is empty, display a message or placeholder
-            return const Text('No budget data available.');
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  'No budget data available.',
+                  style: TextStyle(
+                    fontSize: 16.0,
+                    color: Colors.black,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                // You can add other UI elements or actions based on no data available here
+              ],
+            );
           }
-  
-          return ListView(
+
+                   return ListView(
   children: [ SingleChildScrollView(
             child: Container(
               width: double.infinity,
@@ -382,7 +408,6 @@ String getCategoryNameById(int categoryId) {
 
 ],
 );
-
         }
       },
     );
