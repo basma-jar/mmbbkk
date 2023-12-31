@@ -67,7 +67,7 @@ class _MyBudgetState extends State<MyBudget> {
       future: _budgetData,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const CircularProgressIndicator();
+            return Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
           return Column(
             mainAxisAlignment: MainAxisAlignment.center,

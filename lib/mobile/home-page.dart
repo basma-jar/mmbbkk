@@ -95,8 +95,8 @@ double expense = snapshot.data!['expense'].toDouble();
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Container(
-  margin: EdgeInsets.fromLTRB(25 * fem, 0 * fem, 0 * fem, 12 * fem),
-  height: 165 * fem,
+  margin: EdgeInsets.fromLTRB(30 * fem, 0 * fem, 0 * fem, 15 * fem),
+  height: 180 * fem,
   child: Stack(
     children: [
       // Background Image
@@ -159,7 +159,7 @@ double expense = snapshot.data!['expense'].toDouble();
                                       Container(
                                         margin: EdgeInsets.fromLTRB(0 * fem, 0 * fem, 0 * fem, 2 * fem),
                                         child: Text(
-                                          'Budger for Octorber',
+                                          'Budget',
                                           style: TextStyle(
                                             fontSize: 13 * ffem,
                                             fontWeight: FontWeight.w600,
