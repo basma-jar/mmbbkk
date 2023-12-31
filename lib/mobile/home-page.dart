@@ -53,6 +53,9 @@ class _HomePageState extends State<HomePage> {
 
 
     return Scaffold(
+       appBar: AppBar(
+        title: Text('Dashboard'),
+      ),
       body: FutureBuilder(
         future: futureData,
         builder: (context, snapshot) {
@@ -78,16 +81,7 @@ double expense = snapshot.data!['expense'].toDouble();
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                     Container(
-            padding: EdgeInsets.symmetric(vertical: 20 * fem),
-            child: Text(
-              'Dashboard',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
+                   
                     Container(
                       padding: EdgeInsets.fromLTRB(27 * fem, 32 * fem, 51 * fem, 41 * fem),
                       width: double.infinity,
@@ -95,8 +89,8 @@ double expense = snapshot.data!['expense'].toDouble();
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Container(
-  margin: EdgeInsets.fromLTRB(30 * fem, 0 * fem, 0 * fem, 15 * fem),
-  height: 180 * fem,
+  margin: EdgeInsets.fromLTRB(25 * fem, 0 * fem, 0 * fem, 20 * fem),
+  height: 165 * fem,
   child: Stack(
     children: [
       // Background Image
@@ -109,12 +103,10 @@ double expense = snapshot.data!['expense'].toDouble();
             ),
           ),
         ),
-      ),
-      // Top right image
-      Align(
+         child: Align(
         alignment: Alignment.topRight,
         child: SizedBox(
-          width: 50 * fem,
+          width: 40 * fem,
           height: 20.93 * fem,
           child: Image.asset(
             'assets/mobile/images/visa-png-1.png',
@@ -122,6 +114,9 @@ double expense = snapshot.data!['expense'].toDouble();
           ),
         ),
       ),
+      ),
+      // Top right image
+     
       // Centered text
       Center(
         child: Text(

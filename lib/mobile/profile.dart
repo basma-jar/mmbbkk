@@ -96,18 +96,18 @@ child: GestureDetector(
 
                   ),
                   Container(
-                    // rectangle1S6G (17:1277)
-                    margin: EdgeInsets.fromLTRB(1*fem, 0*fem, 0*fem, 16*fem),
-                    width: 149*fem,
-                    height: 148*fem,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(80*fem),
-                      child: Image.asset(
-                        'assets/mobile/images/rectangle-1.png',
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
+                            // rectangle1S6G (17:1277)
+                            margin: EdgeInsets.fromLTRB(1 * fem, 0 * fem, 0 * fem, 16 * fem),
+                            width: 149 * fem,
+                            height: 148 * fem,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(80 * fem),
+                              child: Image.network(
+                                userData['profile_image'],
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
                   Container(
                     // judevXE (17:1278)
                     margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 5*fem, 0*fem),
