@@ -63,7 +63,11 @@ class _MyBudgetState extends State<MyBudget> {
     double fem = MediaQuery.of(context).size.width / baseWidth;
     double ffem = fem * 0.97;
 
-    return FutureBuilder<List<Map<String, dynamic>>>(
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('My Budget'),
+      ),
+      body: FutureBuilder<List<Map<String, dynamic>>>(
       future: _budgetData,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -410,6 +414,6 @@ class _MyBudgetState extends State<MyBudget> {
 );
         }
       },
-    );
+    ),);
   }
 }

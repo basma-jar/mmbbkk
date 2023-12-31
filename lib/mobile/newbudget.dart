@@ -66,6 +66,9 @@ class _NewBudgetState extends State<NewBudget> {
     double ffem = fem * 0.97;
 
     return Scaffold(
+       appBar: AppBar(
+        title: Text('New Budget'),
+      ),
       body: SingleChildScrollView(
         child: Container(
           width: double.infinity,
@@ -92,54 +95,7 @@ class _NewBudgetState extends State<NewBudget> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
-                        margin: EdgeInsets.fromLTRB(0 * fem, 0 * fem, 164 * fem, 75 * fem),
-                        width: double.infinity,
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                                              Container(
-                   // group30R2k (17:120)
-margin: EdgeInsets.fromLTRB(0*fem, 0*fem, 360*fem, 4*fem),
-child: GestureDetector(
-  onTap: () {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => HomePage(userId: widget.userId)),
-    );
-  },
-  child: Container(
-    padding: EdgeInsets.fromLTRB(20.86 * fem, 23 * fem, 20.86 * fem, 23 * fem),
-    child: Center(
-      // arrowdownHKr (17:122)
-      child: SizedBox(
-        width: 18.29 * fem,
-        height: 14 * fem,
-        child: Image.asset(
-          'assets/mobile/images/arrow-down.png',
-          width: 18.29 * fem,
-          height: 14 * fem,
-        ),
-      ),
-    ),
-  ),
-),
-
-                  ),
-                            Text(
-                              'New Budget',
-                              textAlign: TextAlign.center,
-                              style: SafeGoogleFont(
-                                'Inter',
-                                fontSize: 16 * ffem,
-                                fontWeight: FontWeight.w700,
-                                height: 1.25 * ffem / fem,
-                                color: Color(0xff030303),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                    
                       Container(
                         margin: EdgeInsets.fromLTRB(10 * fem, 0 * fem, 20.37 * fem, 15.11 * fem),
                         width: double.infinity,
