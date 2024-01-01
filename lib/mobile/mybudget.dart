@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:myapp/mobile/home-page.dart';
 import 'package:myapp/mobile/mybalanc.dart';
 import 'package:myapp/utils.dart';
 
@@ -124,100 +123,51 @@ class _MyBudgetState extends State<MyBudget> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      // autogroupoxyap5i (HqzjPdtkrd1EqtPUNCoxya)
-                      margin: EdgeInsets.fromLTRB(5 * fem, 0 * fem, 0 * fem, 43 * fem),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Container(
-                            // group307ac (44:141)
-                            margin: EdgeInsets.fromLTRB(0 * fem, 0 * fem, 107 * fem, 19 * fem),
-                            child: TextButton(
-                              onPressed: () {},
-                              style: TextButton.styleFrom(
-                                padding: EdgeInsets.zero,
-                              ),
-                              child: GestureDetector(
-  onTap: () {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => HomePage(userId: widget.userId)),
-    );
-  },
-  child: Container(
-    padding: EdgeInsets.fromLTRB(20.86 * fem, 23 * fem, 20.86 * fem, 23 * fem),
-    child: Center(
-      // arrowdownHKr (17:122)
-      child: SizedBox(
-        width: 18.29 * fem,
-        height: 14 * fem,
-        child: Image.asset(
-          'assets/mobile/images/arrow-down.png',
-          width: 18.29 * fem,
-          height: 14 * fem,
-        ),
-      ),
-    ),
-  ),
-),
-
-                            ),
-                          ),
-                          Container(
-                            // mybudget6xL (44:75)
-                            margin: EdgeInsets.fromLTRB(0 * fem, 59 * fem, 136 * fem, 0 * fem),
-                            child: Text(
-                              'My Budget',
-                              textAlign: TextAlign.center,
-                              style: SafeGoogleFont(
-                                'Inter',
-                                fontSize: 16 * ffem,
-                                fontWeight: FontWeight.w700,
-                                height: 1.25 * ffem / fem,
-                                color: Color(0xff030303),
-                              ),
-                            ),
-                          ),
-                          Container(
-                            // morehorizontalByn (44:76)
-                            margin: EdgeInsets.fromLTRB(0 * fem, 0 * fem, 0 * fem, 19 * fem),
-                            width: 16 * fem,
-                            height: 2 * fem,
-                            child: Image.asset(
-                              'assets/mobile/images/more-horizontal-ScU.png',
-                              width: 16 * fem,
-                              height: 2 * fem,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Container(
                       // autogroupafnctNQ (HqzjZP7X4Jz7GBz9NsAfNC)
                       width: double.infinity,
                       height: 799 * fem,
                       child: Stack(
                         children: [
                           Positioned(
-                            // rectangle11RNL (44:73)
-                            left: 0 * fem,
-                            top: 0 * fem,
-                            child: Align(
-                              child: SizedBox(
-                                width: 500 * fem,
-                                height: 810 * fem,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: Color(0xff2b383e),
-                                    borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(24 * fem),
-                                      topRight: Radius.circular(24 * fem),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
+  left: 0 * fem,
+  top: 0 * fem,
+  child: Align(
+  child: SizedBox(
+    width: 500 * fem,
+    height: 600 * fem,
+    child: Container(
+      decoration: BoxDecoration(
+        color: Color(0xff2b383e),
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(24 * fem),
+          topRight: Radius.circular(24 * fem),
+        ),
+      ),
+      child: const Column(
+         mainAxisAlignment: MainAxisAlignment.start,
+  crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Add your title here
+          Padding(
+            padding: EdgeInsets.all(16.0),
+            child: Text(
+              'historique',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          // Your existing content goes here
+        ],
+      ),
+    ),
+  ),
+),
+
+),
+
                           Positioned(
                             // rectangle12V7J (44:74)
                             left: 1 * fem,
@@ -251,20 +201,7 @@ class _MyBudgetState extends State<MyBudget> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Container(
-                                    // historiqueHYx (44:109)
-                                    margin: EdgeInsets.fromLTRB(0.57 * fem, 0 * fem, 0 * fem, 15.24 * fem),
-                                    child: Text(
-                                      'Historique',
-                                      style: SafeGoogleFont(
-                                        'Inter',
-                                        fontSize: 15 * ffem,
-                                        fontWeight: FontWeight.w600,
-                                        height: 1.6 * ffem / fem,
-                                        color: Color(0xff030303),
-                                      ),
-                                    ),
-                                  ),
+                                 
                                   Container(
                                     // group33PM6 (44:78)
                                     padding: EdgeInsets.fromLTRB(0 * fem, 0 * fem, 0 * fem, 0 * fem),
